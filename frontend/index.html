@@ -1,0 +1,558 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Roblox Cookie Refresher</title>
+    <style>
+        :root {
+            --primary: #00a2ff;
+            --primary-dark: #0088cc;
+            --secondary: #ff7b00;
+            --dark: #1a1a1a;
+            --darker: #0d0d0d;
+            --light: #f0f0f0;
+            --success: #00cc66;
+            --warning: #ffcc00;
+            --danger: #ff3333;
+            --card-bg: rgba(26, 26, 26, 0.95);
+            --card-border: rgba(255, 255, 255, 0.1);
+        }
+        
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+        }
+        
+        body {
+            background: linear-gradient(135deg, var(--darker), var(--dark));
+            color: var(--light);
+            min-height: 100vh;
+            padding: 20px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        
+        .container {
+            width: 100%;
+            max-width: 600px;
+            margin: 0 auto;
+        }
+        
+        header {
+            text-align: center;
+            margin-bottom: 30px;
+            padding: 20px;
+            width: 100%;
+        }
+        
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 15px;
+        }
+        
+        .logo-icon {
+            width: 60px;
+            height: 60px;
+            background: linear-gradient(135deg, var(--primary), var(--secondary));
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: bold;
+            font-size: 28px;
+            box-shadow: 0 4px 20px rgba(0, 162, 255, 0.3);
+        }
+        
+        h1 {
+            font-size: 2.8rem;
+margin-bottom: 10px;
+background: linear-gradient(135deg, var(--primary), var(--secondary));
+-webkit-background-clip: text;   /* Safari/Chrome */
+background-clip: text;           /* Standard property */
+-webkit-text-fill-color: transparent; /* Safari/Chrome */
+color: transparent;              /* Standard property */
+text-shadow: 0 2px 10px rgba(0, 162, 255, 0.2);
+
+        }
+        
+        .subtitle {
+            font-size: 1.1rem;
+            color: #a0a0a0;
+            margin-bottom: 10px;
+        }
+        
+        .panel {
+            background: var(--card-bg);
+            border-radius: 16px;
+            padding: 25px;
+            box-shadow: 0 8px 32px rgba(0, 0, 0, 0.2);
+            border: 1px solid var(--card-border);
+            margin-bottom: 25px;
+            backdrop-filter: blur(10px);
+        }
+        
+        h2 {
+            color: var(--primary);
+            margin-bottom: 20px;
+            font-size: 1.5rem;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        h2 i {
+            font-size: 1.2em;
+background: linear-gradient(135deg, var(--primary), var(--secondary));
+-webkit-background-clip: text;   /* Safari/Chrome */
+background-clip: text;           /* Standard property */
+-webkit-text-fill-color: transparent; /* Safari/Chrome */
+color: transparent;              /* Standard property */
+
+        }
+        
+        .cookie-input {
+            display: flex;
+            flex-direction: column;
+            gap: 15px;
+            margin-bottom: 20px;
+        }
+        
+        textarea {
+            width: 100%;
+            height: 120px;
+            padding: 16px;
+            border-radius: 12px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(30, 30, 30, 0.8);
+            color: white;
+            font-family: monospace;
+            resize: vertical;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+        
+        textarea:focus {
+            outline: none;
+            border-color: var(--primary);
+            box-shadow: 0 0 0 2px rgba(0, 162, 255, 0.2);
+        }
+        
+        .btn-container {
+            display: flex;
+            gap: 12px;
+            flex-wrap: wrap;
+        }
+        
+        .btn {
+            background: linear-gradient(to right, var(--primary), var(--primary-dark));
+            color: white;
+            border: none;
+            padding: 14px 24px;
+            border-radius: 10px;
+            cursor: pointer;
+            font-size: 1rem;
+            font-weight: 600;
+            transition: all 0.3s;
+            display: inline-flex;
+            align-items: center;
+            gap: 10px;
+            flex: 1;
+            justify-content: center;
+        }
+        
+        .btn:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(0, 162, 255, 0.4);
+        }
+        
+        .btn-green {
+            background: linear-gradient(to right, var(--success), #00aa55);
+        }
+        
+        .btn-orange {
+            background: linear-gradient(to right, var(--secondary), #cc6600);
+        }
+        
+        .btn-gray {
+            background: rgba(255, 255, 255, 0.1);
+        }
+        
+        .btn-gray:hover {
+            background: rgba(255, 255, 255, 0.15);
+        }
+        
+        .status {
+            padding: 16px;
+            border-radius: 12px;
+            text-align: center;
+            margin: 20px 0;
+            font-weight: 600;
+            border: 1px solid var(--card-border);
+            background: rgba(13, 13, 13, 0.6);
+        }
+        
+        .success-status {
+            background: rgba(0, 204, 102, 0.15);
+            color: var(--success);
+            border-color: rgba(0, 204, 102, 0.3);
+        }
+        
+        .error-status {
+            background: rgba(255, 51, 51, 0.15);
+            color: var(--danger);
+            border-color: rgba(255, 51, 51, 0.3);
+        }
+        
+        .warning-status {
+            background: rgba(255, 204, 0, 0.15);
+            color: var(--warning);
+            border-color: rgba(255, 204, 0, 0.3);
+        }
+        
+        .server-url {
+            margin: 15px 0;
+            padding: 12px;
+            background: rgba(0, 0, 0, 0.3);
+            border-radius: 10px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+        }
+        
+        .server-url input {
+            flex: 1;
+            padding: 12px;
+            border-radius: 8px;
+            border: 1px solid rgba(255, 255, 255, 0.1);
+            background: rgba(30, 30, 30, 0.8);
+            color: white;
+        }
+        
+        footer {
+            margin-top: 30px;
+            text-align: center;
+            color: #888;
+            font-size: 0.9rem;
+            width: 100%;
+            padding: 20px;
+            border-radius: 12px;
+            background: rgba(13, 13, 13, 0.6);
+            border: 1px solid var(--card-border);
+        }
+        
+        .badge {
+            display: inline-block;
+            padding: 4px 10px;
+            border-radius: 12px;
+            font-size: 0.8rem;
+            font-weight: bold;
+            margin-left: 10px;
+            background: linear-gradient(to right, var(--success), #00aa55);
+            color: black;
+        }
+        
+        @media (max-width: 600px) {
+            .container {
+                padding: 10px;
+            }
+            
+            h1 {
+                font-size: 2.2rem;
+            }
+            
+            .btn-container {
+                flex-direction: column;
+            }
+            
+            .btn {
+                width: 100%;
+            }
+        }
+    </style>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <div class="logo">
+                <div class="logo-icon">C</div>
+                <h1>Roblox Cookie Refresher</h1>
+            </div>
+            <p class="subtitle">Cookie Refresher Tool</p>
+        </header>
+        
+        <div class="panel">
+            <h2><i class="fas fa-server"></i> Server Connection</h2>
+            
+            <div class="server-url">
+                <input type="text" id="serverUrl" placeholder="http://localhost:3000" value="http://localhost:3000">
+                <button class="btn" id="connectBtn"><i class="fas fa-plug"></i> Connect</button>
+            </div>
+            
+            <div class="status" id="connectionStatus">
+                Not connected to backend server.
+            </div>
+        </div>
+        
+        <div class="panel">
+            <h2><i class="fas fa-cookie-bite"></i> Cookie Input</h2>
+            
+            <div class="cookie-input">
+                <textarea id="cookieData" placeholder="Paste your .ROBLOSECURITY cookie here..."></textarea>
+                
+                <div class="btn-container">
+                    <button class="btn btn-green" id="validateBtn"><i class="fas fa-check-circle"></i> Validate</button>
+                    <button class="btn btn-orange" id="refreshBtn"><i class="fas fa-sync-alt"></i> Refresh</button>
+                    <button class="btn btn-gray" id="clearBtn"><i class="fas fa-trash"></i> Clear</button>
+                </div>
+            </div>
+            
+            <div class="status" id="inputStatus">
+                Ready to validate your cookie.
+            </div>
+        </div>
+        
+        <div class="panel">
+            <h2><i class="fas fa-code"></i> Refreshed Cookie</h2>
+            
+            <div class="cookie-input">
+                <textarea id="refreshedCookie" readonly placeholder="Your refreshed cookie will appear here..."></textarea>
+                
+                <div class="btn-container">
+                    <button class="btn" id="copyBtn"><i class="fas fa-copy"></i> Copy to Clipboard</button>
+                </div>
+            </div>
+            
+            <div class="status" id="outputStatus">
+                No cookie refreshed yet.
+            </div>
+        </div>
+        
+        <footer>
+            <p>Secure cookie refresh utility for Roblox <span class="badge">Secure</span></p>
+        </footer>
+    </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const serverUrl = document.getElementById('serverUrl');
+            const connectBtn = document.getElementById('connectBtn');
+            const cookieData = document.getElementById('cookieData');
+            const refreshedCookie = document.getElementById('refreshedCookie');
+            const validateBtn = document.getElementById('validateBtn');
+            const refreshBtn = document.getElementById('refreshBtn');
+            const clearBtn = document.getElementById('clearBtn');
+            const copyBtn = document.getElementById('copyBtn');
+            const connectionStatus = document.getElementById('connectionStatus');
+            const inputStatus = document.getElementById('inputStatus');
+            const outputStatus = document.getElementById('outputStatus');
+            
+            let isConnected = false;
+            let currentCookie = null;
+            let csrfToken = null;
+            
+            // Connect to backend server
+            connectBtn.addEventListener('click', function() {
+                const url = serverUrl.value;
+                if (!url) {
+                    connectionStatus.textContent = 'Please enter a server URL.';
+                    connectionStatus.className = 'status error-status';
+                    return;
+                }
+                
+                connectionStatus.textContent = 'Connecting to server...';
+                connectionStatus.className = 'status warning-status';
+                connectBtn.disabled = true;
+                
+                // Test connection to backend
+                fetch(`${url}/api/status`)
+                    .then(response => {
+                        if (!response.ok) throw new Error('Server responded with error');
+                        return response.json();
+                    })
+                    .then(data => {
+                        isConnected = true;
+                        connectionStatus.textContent = 'Connected to backend server!';
+                        connectionStatus.className = 'status success-status';
+                        connectBtn.innerHTML = '<i class="fas fa-plug"></i> Connected';
+                    })
+                    .catch(error => {
+                        isConnected = false;
+                        connectionStatus.textContent = 'Failed to connect to server: ' + error.message;
+                        connectionStatus.className = 'status error-status';
+                    })
+                    .finally(() => {
+                        connectBtn.disabled = false;
+                    });
+            });
+            
+            // Clear input
+            clearBtn.addEventListener('click', function() {
+                cookieData.value = '';
+                refreshedCookie.value = '';
+                currentCookie = null;
+                inputStatus.textContent = 'Input cleared. Ready to validate your cookie.';
+                inputStatus.className = 'status';
+                outputStatus.textContent = 'No cookie refreshed yet.';
+                outputStatus.className = 'status';
+            });
+            
+            // Copy to clipboard
+            copyBtn.addEventListener('click', function() {
+                if (!refreshedCookie.value) {
+                    return;
+                }
+                
+                navigator.clipboard.writeText(refreshedCookie.value)
+                    .then(() => {
+                        const originalText = copyBtn.innerHTML;
+                        copyBtn.innerHTML = '<i class="fas fa-check"></i> Copied!';
+                        
+                        setTimeout(() => {
+                            copyBtn.innerHTML = originalText;
+                        }, 2000);
+                    })
+                    .catch(err => {
+                        console.error('Failed to copy: ', err);
+                    });
+            });
+            
+            // Validate cookie
+            validateBtn.addEventListener('click', function() {
+                if (!isConnected) {
+                    inputStatus.textContent = 'Please connect to a backend server first.';
+                    inputStatus.className = 'status error-status';
+                    return;
+                }
+                
+                const cookie = cookieData.value.trim();
+                
+                if (!cookie) {
+                    inputStatus.textContent = 'Please enter a cookie to validate.';
+                    inputStatus.className = 'status error-status';
+                    return;
+                }
+                
+                // Show loading state
+                inputStatus.textContent = 'Validating cookie with server...';
+                inputStatus.className = 'status warning-status';
+                validateBtn.disabled = true;
+                
+                // Send validation request to backend
+                fetch(`${serverUrl.value}/api/validate`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': csrfToken || ''
+                    },
+                    body: JSON.stringify({ cookie })
+                })
+                .then(response => {
+                    if (response.status === 403) {
+                        // CSRF token might be missing or invalid
+                        return handleCSRFToken(response, () => validateCookie(cookie));
+                    }
+                    if (!response.ok) throw new Error('Server responded with error');
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.valid) {
+                        currentCookie = cookie;
+                        inputStatus.textContent = 'Cookie is valid!';
+                        inputStatus.className = 'status success-status';
+                    } else {
+                        inputStatus.textContent = 'Cookie is invalid: ' + (data.error || 'Unknown error');
+                        inputStatus.className = 'status error-status';
+                    }
+                })
+                .catch(error => {
+                    inputStatus.textContent = 'Error validating cookie: ' + error.message;
+                    inputStatus.className = 'status error-status';
+                })
+                .finally(() => {
+                    validateBtn.disabled = false;
+                });
+            });
+            
+            // Refresh cookie
+            refreshBtn.addEventListener('click', function() {
+                if (!isConnected) {
+                    outputStatus.textContent = 'Please connect to a backend server first.';
+                    outputStatus.className = 'status error-status';
+                    return;
+                }
+                
+                if (!currentCookie) {
+                    outputStatus.textContent = 'Please validate a cookie first.';
+                    outputStatus.className = 'status error-status';
+                    return;
+                }
+                
+                // Show loading state
+                outputStatus.textContent = 'Refreshing cookie with server...';
+                outputStatus.className = 'status warning-status';
+                refreshBtn.disabled = true;
+                
+                // Send refresh request to backend
+                fetch(`${serverUrl.value}/api/refresh`, {
+                    method: 'POST',
+                    headers: {
+                        'Content-Type': 'application/json',
+                        'X-CSRF-Token': csrfToken || ''
+                    },
+                    body: JSON.stringify({ cookie: currentCookie })
+                })
+                .then(response => {
+                    if (response.status === 403) {
+                        // CSRF token might be missing or invalid
+                        return handleCSRFToken(response, () => refreshCookie(currentCookie));
+                    }
+                    if (!response.ok) throw new Error('Server responded with error');
+                    return response.json();
+                })
+                .then(data => {
+                    if (data.refreshed) {
+                        // Update UI with refreshed cookie
+                        refreshedCookie.value = data.cookie;
+                        
+                        // Update status
+                        outputStatus.textContent = 'Cookie refreshed successfully!';
+                        outputStatus.className = 'status success-status';
+                    } else {
+                        outputStatus.textContent = 'Error refreshing cookie: ' + (data.error || 'Unknown error');
+                        outputStatus.className = 'status error-status';
+                    }
+                })
+                .catch(error => {
+                    outputStatus.textContent = 'Error refreshing cookie: ' + error.message;
+                    outputStatus.className = 'status error-status';
+                })
+                .finally(() => {
+                    refreshBtn.disabled = false;
+                });
+            });
+            
+            // Handle CSRF token requests
+            function handleCSRFToken(response, retryRequest) {
+                // Get CSRF token from response header
+                const newCSRFToken = response.headers.get('X-CSRF-Token');
+                
+                if (newCSRFToken) {
+                    csrfToken = newCSRFToken;
+                    // Retry the original request with new token
+                    return retryRequest();
+                } else {
+                    throw new Error('CSRF token validation failed and no new token provided');
+                }
+            }
+        });
+    </script>
+</body>
+</html>
